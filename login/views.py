@@ -41,7 +41,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         # Si es un usuario normal, solo se devuelve a sí mismo en los listados
         return Usuario.objects.filter(pk=user.pk)
 
-    # CRUD
+    # CRUD de Usuarios
     def get_permissions(self):
         if self.action == 'create':
             permission_classes = [permissions.AllowAny]
@@ -64,9 +64,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     filterset_fields = '__all__'
 
-    # De momento, los usuarios con el permiso de CRUD de Groups pueden hacer modificaciones sobre este.
-    # Si lo que se requiere es que solo el admin pueda tener estos permisos, quitar el código de get_permissions y cambiar por:
-    # permission_classes = [permissions.IsAdminUser]
+    # Los usuarios (estudiantes o docentes) con el permiso de CRUD de Groups pueden hacer modificaciones sobre este.
     def get_permissions(self): 
         permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
@@ -135,3 +133,61 @@ class UserRolesView(APIView):
         return Response({
             "message": "Rol revocado correctamente."
         })
+
+
+class MisRolesView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        roles = request.user.groups.values(
+            'id',
+            'name'
+        )
+
+        return Response({
+            "roles": list(roles)
+        })
+
+class MisPermissionsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        permisos = request.user.get_all_permissions()
+
+        return Response({
+            "permisos": sorted(list(permisos))
+        })
+    
+
+class ActivateAccountView(APIView):
+    permission_classes = [permissions.AllowAny]
+    authentication_classes = []
+
+    def post(self, request, uid, token):
+        # Tomamos uid y token de la URL, y new_password del body JSON
+        data = {
+            'uid': uid,
+            'token': token,
+            'new_password': request.data.get('new_password')
+        }
+
+        serializer = ActivationSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({
+            "message": "Cuenta activada correctamente."
+        }, status=status.HTTP_200_OK)
+
+
+class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = LogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({
+            "message": "Sesión cerrada correctamente."
+        }, status=status.HTTP_200_OK)
