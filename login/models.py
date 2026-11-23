@@ -66,12 +66,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
                     
         return f"{self.nombres} {self.apellido_p} {self.apellido_m}"
 
-    def has_perm(self, perm, obj = None):
-        return True
-    
-    def has_module_perms(self, app_label):
-        return True
-
     @property
     def is_staff(self):
         return self.usuario_administrador

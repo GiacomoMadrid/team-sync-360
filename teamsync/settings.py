@@ -35,6 +35,12 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'login',
+    'cursos',
+    'diagnosticos',
+    'equipos',
+    'apoyo',
+    'tareas',
     'django_filters',
     'corsheaders',
     'rest_framework',
@@ -123,6 +129,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Usuario personalizado
+AUTH_USER_MODEL = "login.Usuario"
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/

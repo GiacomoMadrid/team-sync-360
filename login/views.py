@@ -1,7 +1,5 @@
-from django.shortcuts import render
-
 from rest_framework import viewsets, permissions, generics, status
-from .serializers import UsuarioSerializer, PaisSerializer, GroupSerializer, TipoDocumentoSerializer, RegisterSerializer, ActivationSerializer, UsuarioAdminSerializer, UsuarioPerfilSelfSerializer, LogoutSerializer
+from .serializers import UsuarioSerializer, GroupSerializer,  RegisterSerializer, ActivationSerializer, UsuarioAdminSerializer, UsuarioPerfilSelfSerializer, LogoutSerializer
 from .models import Usuario, Group
 from django.shortcuts import render
 from django.http import HttpResponse

@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: Dockerfile
 
-    container_name: teamsync_backend
+    container_name: teamsync_web
     restart: unless-stopped
 
     command: python manage.py runserver 0.0.0.0:8000
@@ -52,4 +52,4 @@ services:
         condition: service_healthy
 
 volumes:
-  storm_postgres_data:
+  teamsync_postgres_data:
